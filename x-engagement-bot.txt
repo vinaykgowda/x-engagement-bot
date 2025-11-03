@@ -1,0 +1,584 @@
+x-engagement-bot/
+│
+├── bot/                                    # Discord Bot (Node.js)
+│   ├── src/
+│   │   ├── index.js                        # Main entry point
+│   │   │
+│   │   ├── config/
+│   │   │   ├── settings.js                 # Configuration
+│   │   │   ├── database.js                 # SQLite connection
+│   │   │   └── logger.js                   # Winston logger
+│   │   │
+│   │   ├── database/
+│   │   │   ├── schema.js                   # Database schema/tables
+│   │   │   ├── migrations.js               # Database setup
+│   │   │   └── queries.js                  # SQL queries
+│   │   │
+│   │   ├── commands/
+│   │   │   ├── deploy-commands.js          # Register slash commands
+│   │   │   │
+│   │   │   ├── admin/
+│   │   │   │   ├── post-engagement.js      # Post tweet for engagement
+│   │   │   │   ├── set-points.js           # Set points per engagement type
+│   │   │   │   ├── set-rewards.js          # Configure point rewards
+│   │   │   │   ├── view-stats.js           # View engagement stats
+│   │   │   │   ├── set-expiration.js       # Set engagement expiration
+│   │   │   │   ├── setup-raid.js           # Setup raid channel & rewards
+│   │   │   │   ├── set-raid-rewards.js     # Set raid tweet rewards by role
+│   │   │   │   └── set-tweet-limit.js      # Set tweet posting frequency
+│   │   │   │
+│   │   │   ├── user/
+│   │   │   │   ├── set-profile.js          # Link Twitter profile
+│   │   │   │   ├── my-profile.js           # View/edit profile
+│   │   │   │   ├── my-points.js            # Check points balance
+│   │   │   │   ├── leaderboard.js          # View leaderboard
+│   │   │   │   ├── set-wallet.js           # Set Solana wallet
+│   │   │   │   ├── my-wallet.js            # View/edit wallet
+│   │   │   │   └── claim-reward.js         # Spend points for rewards
+│   │   │   │
+│   │   │   └── superadmin/
+│   │   │       ├── generate-code.js        # Generate server access codes
+│   │   │       ├── list-servers.js         # List all connected servers
+│   │   │       └── server-stats.js         # View cross-server stats
+│   │   │
+│   │   ├── events/
+│   │   │   ├── ready.js                    # Bot ready event
+│   │   │   ├── interactionCreate.js        # Handle all interactions
+│   │   │   ├── messageCreate.js            # Handle raid channel tweets
+│   │   │   └── guildCreate.js              # New server joins
+│   │   │
+│   │   ├── handlers/
+│   │   │   ├── engagement/
+│   │   │   │   ├── engagementManager.js    # Manage engagement campaigns
+│   │   │   │   ├── verificationQueue.js    # Queue engagement checks
+│   │   │   │   └── expirationChecker.js    # Check/expire old campaigns
+│   │   │   │
+│   │   │   ├── rewards/
+│   │   │   │   ├── pointsManager.js        # Points tracking & assignment
+│   │   │   │   ├── rewardManager.js        # Reward distribution
+│   │   │   │   ├── solanaManager.js        # Solana transactions
+│   │   │   │   └── walletManager.js        # User wallet management
+│   │   │   │
+│   │   │   ├── raid/
+│   │   │   │   ├── raidMonitor.js          # Monitor raid channel
+│   │   │   │   ├── tweetValidator.js       # Validate tweet links
+│   │   │   │   ├── frequencyChecker.js     # Check posting frequency
+│   │   │   │   └── autoReward.js           # Auto-send raid rewards
+│   │   │   │
+│   │   │   ├── profile/
+│   │   │   │   ├── profileManager.js       # Global user profiles
+│   │   │   │   ├── duplicateChecker.js     # Check for duplicate profiles
+│   │   │   │   └── profileValidator.js     # Validate Twitter URLs
+│   │   │   │
+│   │   │   ├── access/
+│   │   │   │   ├── accessCodeManager.js    # Generate/validate codes
+│   │   │   │   ├── serverManager.js        # Multi-server management
+│   │   │   │   └── permissionChecker.js    # Check permissions
+│   │   │   │
+│   │   │   └── scraper/
+│   │   │       └── scraperClient.js        # Python scraper API client
+│   │   │
+│   │   ├── components/
+│   │   │   ├── buttons/
+│   │   │   │   ├── engagementButtons.js    # Like, RT, Comment, Bookmark buttons
+│   │   │   │   ├── checkButton.js          # Check engagement button
+│   │   │   │   └── rewardButtons.js        # Claim reward buttons
+│   │   │   │
+│   │   │   ├── modals/
+│   │   │   │   ├── profileModal.js         # Twitter profile input modal
+│   │   │   │   ├── walletModal.js          # Solana wallet input modal
+│   │   │   │   └── commentModal.js         # Comment input modal
+│   │   │   │
+│   │   │   └── embeds/
+│   │   │       ├── engagementEmbed.js      # Engagement campaign embed
+│   │   │       ├── leaderboardEmbed.js     # Leaderboard embed
+│   │   │       ├── profileEmbed.js         # User profile embed
+│   │   │       └── rewardEmbed.js          # Available rewards embed
+│   │   │
+│   │   └── utils/
+│   │       ├── validation.js               # Input validation helpers
+│   │       ├── rateLimiter.js              # Rate limiting
+│   │       ├── timeUtils.js                # Time/date utilities
+│   │       ├── tweetParser.js              # Parse tweet URLs
+│   │       └── encryption.js               # Encrypt sensitive data
+│   │
+│   ├── package.json                        # Node.js dependencies
+│   ├── package-lock.json
+│   └── .env                                # Environment variables
+│
+├── scraper/                                # Python Scraper Service
+│   ├── src/
+│   │   ├── main.py                         # FastAPI server
+│   │   ├── config.py                       # Scraper config
+│   │   │
+│   │   ├── api/
+│   │   │   ├── routes.py                   # API endpoints
+│   │   │   └── models.py                   # Pydantic models
+│   │   │
+│   │   ├── scrapers/
+│   │   │   ├── twitter_scraper.py          # Base Twitter scraper
+│   │   │   ├── engagement_checker.py       # Check user engagements
+│   │   │   └── cache_manager.py            # Cache results
+│   │   │
+│   │   └── utils/
+│   │       ├── rate_limiter.py             # Rate limiting
+│   │       ├── logger.py                   # Logging
+│   │       └── validation.py               # Input validation
+│   │
+│   ├── requirements.txt                    # Python dependencies
+│   ├── venv/                               # Virtual environment (created)
+│   └── .env                                # Environment variables
+│
+├── database/
+│   ├── bot.db                              # SQLite database (auto-created)
+│   └── backups/                            # Database backups
+│
+├── logs/
+│   ├── bot.log                             # Bot logs
+│   ├── scraper.log                         # Scraper logs
+│   └── error.log                           # Error logs
+│
+├── .env.example                            # Environment template
+├── README.md                               # Documentation
+└── start.sh                                # Quick start script
+
+
+📊 Database Schema
+Global Tables (Cross-Server):
+1. global_users           - Global user profiles (one per user)
+2. global_twitter_profiles - Twitter profiles (unique globally)
+3. global_wallets         - Solana wallets
+Server-Specific Tables:
+4. servers                - Server configurations
+5. server_access_codes    - Access codes for onboarding
+6. server_engagements     - Engagement campaigns (per server)
+7. server_user_engagements - User engagement tracking (per server)
+8. server_points          - User points (per server)
+9. server_rewards         - Reward configs (per server)
+10. server_raid_config    - Raid channel config (per server)
+11. server_raid_tweets    - Raid tweet tracking (per server)
+12. server_transactions   - Transaction history (per server)
+🎯 Feature Coverage Checklist
+✅ Admin Features:
+
+ Post engagement campaigns with custom options (like, RT, comment, bookmark)
+ Set points per engagement type
+ Configure rewards per point amount
+ View engagement statistics per post
+ Set expiration time for campaigns
+ Setup raid channel configuration
+ Set raid rewards based on user roles
+ Set tweet posting frequency limits
+ Auto-transfer rewards on raid tweets
+
+✅ User Features:
+
+ Set Twitter profile (global, duplicate-checked)
+ View/edit Twitter profile
+ Dynamic engagement buttons based on campaign type
+ Check engagement button (verifies via Python scraper)
+ Points accumulation system
+ Leaderboard (top 10 + user's rank if not in top 10)
+ Reward availability notification on check
+ Set/edit Solana wallet
+ Spend points to claim rewards
+
+✅ Raid Features:
+
+ Raid channel monitoring
+ Auto-detect tweet links
+ Role-based reward calculation
+ Frequency limiting (e.g., 1 tweet per 24hrs)
+ Auto-reward distribution
+
+✅ Super-Admin Features:
+
+ Generate access codes for new servers
+ Multi-server support
+ Global user profiles (work across servers)
+ Server-specific rules (points, rewards, raids)
+ Cross-server stats
+
+ ┌─────────────────────────────────────────────────────────┐
+│                    Discord Bot (Node.js)                 │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+│  │  Admin   │  │   User   │  │  Super   │              │
+│  │ Commands │  │ Commands │  │  Admin   │              │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘              │
+│       │             │              │                     │
+│       └─────────────┴──────────────┘                     │
+│                     │                                    │
+│       ┌─────────────┴─────────────┐                     │
+│       │                           │                     │
+│  ┌────▼────┐              ┌──────▼──────┐              │
+│  │ SQLite  │              │  Handlers   │              │
+│  │Database │              │  & Managers │              │
+│  │ (Global │              └──────┬──────┘              │
+│  │  & Per  │                     │                     │
+│  │ Server) │                     │                     │
+│  └─────────┘                     │                     │
+└────────────────────────────────┬─┘                     │
+                                 │                       │
+                    HTTP API     │                       │
+                                 ▼                       │
+┌─────────────────────────────────────────────────────────┐
+│            Python Scraper Service (FastAPI)             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
+│  │   Twitter    │  │  Engagement  │  │    Cache     │ │
+│  │   Scraper    │  │   Checker    │  │   Manager    │ │
+│  └──────────────┘  └──────────────┘  └──────────────┘ │
+│            (Verifies likes, RTs, comments, etc.)        │
+└─────────────────────────────────────────────────────────┘
+
+
+📁 Admin Commands - Complete Set
+Save these files in bot/src/commands/admin/:
+File 1: deploy-commands.js (Lines 1-45)
+
+Deploys all slash commands to Discord
+Run with: npm run deploy
+
+File 2: post-engagement.js (Lines 47-227)
+
+Posts tweet engagement campaigns
+Creates dynamic buttons based on requirements
+Tracks in database
+Usage: /post-engagement tweet-url:URL points:100 requirements:like+rt
+
+File 3: set-points.js (Lines 229-265)
+
+Sets default points per engagement
+Usage: /set-points points:100
+
+File 4: set-rewards.js (Lines 267-356)
+
+Configures point rewards (SOL, Token, or Role)
+Usage: /set-rewards name:"VIP Role" points-cost:1000 type:role role:@VIP
+
+File 5: view-stats.js (Lines 358-470)
+
+View overall or specific engagement stats
+Shows completions, attempts, breakdown
+Usage: /view-stats or /view-stats tweet-id:123456
+
+File 6: set-expiration.js (Lines 472-533)
+
+Set/update engagement expiration
+Usage: /set-expiration tweet-id:123456 hours:24
+
+File 7: setup-raid.js (Lines 535-622)
+
+Configure raid channels and settings
+Usage: /setup-raid post-channel:#tweets raid-channel:#raids default-points:50
+
+File 8: set-raid-rewards.js (Lines 624-693)
+
+Set rewards based on user roles
+Usage: /set-raid-rewards role:@Premium reward-type:sol amount:0.01
+
+File 9: set-tweet-limit.js (Lines 695-end)
+
+Set posting frequency (e.g., 1 tweet per 24hrs)
+Usage: /set-tweet-limit hours:24
+
+
+
+------------------
+
+
+📁 User Commands - Complete Set
+Save these files in bot/src/commands/user/:
+File 1: set-profile.js (Lines 1-28)
+
+Opens modal to link Twitter profile
+Usage: /set-profile
+Opens modal → Enter Twitter username
+
+File 2: my-profile.js (Lines 30-114)
+
+View complete user profile
+Shows Twitter profile, wallet, account info
+Buttons to update Twitter/wallet
+Usage: /my-profile
+
+File 3: my-points.js (Lines 116-182)
+
+Check points balance
+Shows total, available, spent, and rank
+Usage: /my-points
+
+File 4: leaderboard.js (Lines 184-253)
+
+View top 10 users
+Shows user's rank if not in top 10
+Highlights current user
+Usage: /leaderboard
+
+File 5: set-wallet.js (Lines 255-288)
+
+Opens modal to set Solana wallet
+Validates wallet address format
+Usage: /set-wallet
+
+File 6: my-wallet.js (Lines 290-367)
+
+View wallet details
+Links to Solscan/Explorer
+Update wallet button
+Usage: /my-wallet
+
+File 7: claim-reward.js (Lines 369-467)
+
+View available rewards
+Select menu to claim rewards
+Shows points balance
+Usage: /claim-reward
+
+File 8: ping.js (Lines 469-end)
+
+Test command for bot health
+Usage: /ping
+
+
+🎯 Key Features:
+✅ Twitter Profile - Link and verify Twitter accounts globally
+✅ Wallet Management - Set Solana wallet for rewards
+✅ Points Tracking - View balance, earned, spent
+✅ Leaderboard - Competitive ranking system
+✅ Smart UI - Shows rank even if not in top 10
+✅ Reward System - Browse and claim rewards
+✅ Profile Management - View and edit all info
+✅ Global Profiles - Work across all servers using the bot
+
+
+----------------------
+
+📁 Superadmin Commands - Complete Set
+Save these files in bot/src/commands/superadmin/:
+File 1: generate-code.js (Lines 1-70)
+
+Generate unique access codes for new servers
+Set expiration time (or never expire)
+Only accessible by super admin
+Usage: /generate-code expires-in:30
+Output: Unique 12-character code like A3F9K2P8Q1M5
+
+File 2: list-servers.js (Lines 72-195)
+
+List all servers using the bot
+Shows online/offline status
+Displays stats per server:
+
+Member count
+Engagement campaigns
+Active users
+Total points distributed
+
+
+Paginated (10 servers per page)
+Usage: /list-servers or /list-servers show-inactive:true
+
+File 3: server-stats.js (Lines 197-end)
+
+Comprehensive cross-server statistics
+Shows:
+
+Total servers, users, profiles, wallets
+Engagement campaigns & completions
+Points earned/spent/available
+Reward claims
+Raid tweets & transactions
+Top 5 most active servers
+Top 5 users by points (global)
+Access code statistics
+Bot uptime & status
+
+
+Usage: /server-stats
+
+
+🔐 Security Features:
+✅ Super Admin Only - All commands restricted to SUPER_ADMIN_USER_ID
+✅ Access Code System - Whitelist servers before they can use the bot
+✅ Code Expiration - Time-limited access codes
+✅ Global Oversight - Monitor all servers from one place
+✅ Usage Tracking - Track which codes are used/expired
+
+📊 What Super Admin Can Do:
+
+Control Bot Access
+
+Generate codes for new servers
+Set expiration on codes
+Track code usage
+
+
+Monitor All Servers
+
+See which servers are active
+View stats per server
+Check engagement activity
+
+
+Global Analytics
+
+Cross-server statistics
+Top performing servers
+Top users globally
+Overall engagement metrics
+
+
+Manage Multi-Server
+
+Users have ONE profile across all servers
+Each server has own points/rewards/settings
+Super admin sees the big picture
+
+
+
+
+🎯 How It Works:
+Setup New Server:
+1. Super admin runs: /generate-code expires-in:30
+2. Code generated: A3F9K2P8Q1M5
+3. Share with server owner
+4. Server owner uses code when bot joins
+5. Server gets access to full features
+```
+
+### **Monitor Activity:**
+```
+/list-servers          → See all servers
+/server-stats          → View global stats
+/list-servers show-inactive:true  → Include offline servers
+
+
+
+------------------------
+
+📁 Event Handlers - Complete Set
+Save these files in bot/src/events/:
+File 1: ready.js (Lines 1-72)
+When bot starts:
+
+✅ Logs bot info (name, ID, servers, users)
+✅ Sets bot status ("Watching X Engagements")
+✅ Starts background tasks
+✅ Checks expired engagements every 5 minutes
+✅ Auto-deactivates expired campaigns
+
+File 2: interactionCreate.js (Lines 74-303)
+Handles ALL interactions:
+
+✅ Slash commands
+✅ Button clicks
+✅ Modal submissions
+✅ Select menus
+
+Button Handlers:
+
+check_engagement - Verify user completed engagement
+update_twitter - Update Twitter profile
+update_wallet - Update Solana wallet
+open_wallet_modal - Open wallet modal
+
+Modal Handlers:
+
+profile_modal - Submit Twitter profile
+wallet_modal - Submit Solana wallet
+comment_modal - Submit tweet comment
+
+Select Menu Handlers:
+
+select_reward - Claim selected reward
+
+File 3: messageCreate.js (Lines 305-542)
+Raid Tweet Monitoring:
+
+✅ Monitors raid channel for tweet links
+✅ Extracts tweet URLs automatically
+✅ Validates user profile & wallet
+✅ Enforces frequency limits (e.g., 1 tweet per 24hrs)
+✅ Prevents duplicate submissions
+✅ Calculates role-based rewards
+✅ Awards points immediately
+✅ Posts to raid announcement channel
+✅ Processes Solana rewards in background
+✅ Logs all transactions
+
+Key Features:
+javascript// User posts: "Check out my tweet! https://twitter.com/user/status/123456"
+Bot automatically:
+1. Detects tweet URL
+2. Checks if user can post (24hr limit)
+3. Verifies not duplicate
+4. Calculates reward based on roles
+5. Awards points/tokens
+6. Posts to announcement channel
+7. Sends confirmation to user
+File 4: guildCreate.js (Lines 544-end)
+When bot joins new server:
+
+✅ Adds server to database
+✅ Creates default config (100 points per engagement)
+✅ Sends welcome message with setup guide
+✅ Updates server name if rejoining
+
+
+🎯 Key Features:
+ready.js - Background Tasks:
+javascriptEvery 5 minutes:
+- Check for expired engagements
+- Auto-deactivate old campaigns
+- Keep database clean
+interactionCreate.js - Unified Handler:
+javascriptAll user interactions flow through here:
+Commands → Buttons → Modals → Menus
+Dynamic imports for component handlers
+Error handling for all interaction types
+messageCreate.js - Smart Raid System:
+javascriptAutomatic detection:
+✅ Tweet URL in message → Process automatically
+✅ Check frequency limit → Prevent spam
+✅ Role-based rewards → Different rewards per role
+✅ Auto-transfer → Solana rewards sent automatically
+✅ Duplicate prevention → Can't submit same tweet twice
+guildCreate.js - Onboarding:
+javascriptNew server joins:
+1. Add to database
+2. Setup default config
+3. Send welcome guide
+4. Ready to use immediately
+```
+
+---
+
+## **💡 How It All Works Together:**
+
+### **User Journey:**
+```
+1. User joins server with bot
+   → guildCreate.js sets up server
+
+2. User links Twitter profile
+   → /set-profile command
+   → interactionCreate.js → Opens modal
+   → User submits → profileModal.js processes
+
+3. Admin posts engagement
+   → /post-engagement command
+   → Creates campaign with buttons
+
+4. User clicks "Check Engagement"
+   → Button click → interactionCreate.js
+   → checkButton.js verifies via Python scraper
+   → Points awarded if complete
+
+5. User posts raid tweet
+   → messageCreate.js detects URL
+   → Validates & awards automatically
+   → Posts to announcement channel
+
+6. Background: Every 5 minutes
+   → ready.js checks expired campaigns
+   → Auto-deactivates old engagements
