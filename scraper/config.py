@@ -1,36 +1,28 @@
-from pydantic_settings import BaseSettings
-from typing import List
+# Server Configuration
+HOST=0.0.0.0
+PORT=8000
+ENVIRONMENT=development
+DEBUG=true
 
-class Settings(BaseSettings):
-    # Server
-    HOST: str = "0.0.0.0"
-    PORT: int = 8000
-    ENVIRONMENT: str = "development"
-    DEBUG: bool = True
+# CORS
+ALLOWED_ORIGINS=["*"]
 
-    # CORS
-    ALLOWED_ORIGINS: List[str] = ["*"]
+# RapidAPI Configuration (Twitter AIO)
+# 👇 ADD YOUR RAPIDAPI KEY HERE 👇
+RAPIDAPI_KEY=8c5133daecmshbdd77cd334421c8p1ebcb1jsn3ee414f79f3e
+RAPIDAPI_HOST=twitter-aio.p.rapidapi.com
+RAPIDAPI_BASE_URL=https://twitter-aio.p.rapidapi.com
 
-    # Rate Limiting
-    RATE_LIMIT_REQUESTS: int = 100
-    RATE_LIMIT_WINDOW: int = 3600  # seconds
+# Rate Limiting
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=3600
 
-    # Cache
-    CACHE_ENABLED: bool = True
-    CACHE_TTL: int = 300  # seconds
-    CACHE_MAX_SIZE: int = 1000
+# Cache Settings
+CACHE_ENABLED=true
+CACHE_TTL=300
+CACHE_MAX_SIZE=1000
 
-    # Scraping
-    REQUEST_TIMEOUT: int = 30
-    MAX_RETRIES: int = 3
-    RETRY_DELAY: int = 2
-
-    # Browser Settings
-    HEADLESS: bool = True
-    BROWSER_TIMEOUT: int = 30000  # milliseconds
-
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-
-settings = Settings()
+# Scraping Configuration
+REQUEST_TIMEOUT=30
+MAX_RETRIES=3
+RETRY_DELAY=2
