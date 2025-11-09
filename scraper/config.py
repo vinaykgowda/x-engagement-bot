@@ -15,8 +15,8 @@ ALLOWED_ORIGINS=["*"]
 # RapidAPI Configuration (Twitter AIO API)
 # ============================================================================
 # Get your API key from: https://rapidapi.com/Devomes/api/twitter-aio
-# This API is used as the primary method for fetching Twitter/X data
-# Playwright browser automation is used as fallback if this is not configured
+# REQUIRED: This API is used for all Twitter/X data fetching
+# Without a valid API key, the scraper service will not function
 # 👇 ADD YOUR RAPIDAPI KEY HERE 👇
 RAPIDAPI_KEY=8c5133daecmshbdd77cd334421c8p1ebcb1jsn3ee414f79f3e
 RAPIDAPI_HOST=twitter-aio.p.rapidapi.com
