@@ -4,6 +4,8 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 from api.routes import router
+from api.models import VerifyEngagementRequest, VerifyEngagementResponse
+from scrapers.engagement_checker import engagement_checker
 from config import settings
 from utils.logger import logger
 
@@ -38,6 +40,46 @@ async def root():
         "version": "1.0.0",
         "status": "running"
     }
+
+@app.post("/api/verify-engagement", response_model=VerifyEngagementResponse)
+async def verify_engagement(request: VerifyEngagementRequest):
+    """Backward compatibility endpoint for engagement verification"""
+    try:
+        if not settings.RAPIDAPI_KEY:
+            raise HTTPException(status_code=500, detail="RapidAPI key not configured")
+
+        # Check user engagement
+        engagement_data = await engagement_checker.check_user_engagement(
+            request.username,
+            request.tweet_id
+        )
+
+        # Check if all required actions are completed
+        all_completed = True
+        if request.actions:
+            for action in request.actions:
+                if action.lower() == 'like' and not engagement_data.get('liked', False):
+                    all_completed = False
+                elif action.lower() == 'retweet' and not engagement_data.get('retweeted', False):
+                    all_completed = False
+                elif action.lower() == 'comment' and not engagement_data.get('commented', False):
+                    all_completed = False
+                elif action.lower() == 'bookmark' and not engagement_data.get('bookmarked', False):
+                    all_completed = False
+
+        return VerifyEngagementResponse(
+            liked=engagement_data.get('liked', False),
+            retweeted=engagement_data.get('retweeted', False),
+            commented=engagement_data.get('commented', False),
+            bookmarked=engagement_data.get('bookmarked', False),
+            all_completed=all_completed
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in verify-engagement: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 async def health_check():

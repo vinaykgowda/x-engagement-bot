@@ -19,8 +19,8 @@ class EngagementChecker:
             # Check all engagement types
             engagement_data = await self._check_all_engagements(username, tweet_id)
 
-            # Cache for short time (60 seconds)
-            self.cache.set(cache_key, engagement_data, ttl=60)
+            # Cache for 5 minutes (300 seconds) - optimized for better performance
+            self.cache.set(cache_key, engagement_data, ttl=300)
 
             return engagement_data
 

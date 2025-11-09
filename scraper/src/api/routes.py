@@ -9,7 +9,14 @@ from api.models import (
     VerifyTweetRequest,
     VerifyTweetResponse,
     GetTweetResponse,
-    GetUserProfileResponse
+    GetUserProfileResponse,
+    BatchValidateRequest,
+    BatchValidateResponse,
+    SearchTweetsRequest,
+    SearchTweetsResponse,
+    SearchTweetResult,
+    VerifyEngagementRequest,
+    VerifyEngagementResponse
 )
 from scrapers.twitter_scraper import twitter_scraper
 from scrapers.engagement_checker import engagement_checker
@@ -161,6 +168,85 @@ async def get_user_profile(username: str):
         raise
     except Exception as e:
         logger.error(f"Error getting user profile: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/validate-batch", response_model=BatchValidateResponse)
+async def validate_batch(request: BatchValidateRequest):
+    """Batch validate multiple tweets"""
+    try:
+        if not settings.RAPIDAPI_KEY:
+            raise HTTPException(status_code=500, detail="RapidAPI key not configured")
+
+        results = []
+        for tweet_request in request.tweets:
+            try:
+                # Validate each tweet
+                tweet_data = await twitter_scraper.get_tweet(tweet_request.tweet_url)
+
+                if not tweet_data:
+                    results.append(ValidateTweetResponse(
+                        success=False,
+                        error="Failed to fetch tweet data"
+                    ))
+                    continue
+
+                # Verify author matches
+                if tweet_data['author_username'].lower() != tweet_request.expected_username.lower():
+                    results.append(ValidateTweetResponse(
+                        success=False,
+                        error=f"Tweet author does not match expected username"
+                    ))
+                    continue
+
+                results.append(ValidateTweetResponse(
+                    success=True,
+                    data=tweet_data
+                ))
+
+            except Exception as e:
+                logger.error(f"Error validating tweet in batch: {e}")
+                results.append(ValidateTweetResponse(
+                    success=False,
+                    error=str(e)
+                ))
+
+        return BatchValidateResponse(success=True, results=results)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in batch validation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/search", response_model=SearchTweetsResponse)
+async def search_tweets(request: SearchTweetsRequest):
+    """Search tweets by query"""
+    try:
+        if not settings.RAPIDAPI_KEY:
+            raise HTTPException(status_code=500, detail="RapidAPI key not configured")
+
+        if not rate_limiter.check_limit("search"):
+            raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+        # Use RapidAPI client to search tweets
+        from scrapers.rapidapi_client import rapidapi_client
+
+        tweet_results = await rapidapi_client.search_tweets(request.query, request.count)
+
+        results = [
+            SearchTweetResult(**tweet) for tweet in tweet_results
+        ]
+
+        return SearchTweetsResponse(
+            success=True,
+            results=results,
+            count=len(results)
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error searching tweets: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/stats")
