@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 class Encryption {
   constructor() {
@@ -87,4 +87,4 @@ class Encryption {
   }
 }
 
-module.exports = new Encryption();
+export default new Encryption();

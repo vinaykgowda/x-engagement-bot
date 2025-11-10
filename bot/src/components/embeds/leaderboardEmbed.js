@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
 class LeaderboardEmbed {
   create(leaderboardData, guildName) {
@@ -98,4 +98,4 @@ class LeaderboardEmbed {
   }
 }
 
-module.exports = new LeaderboardEmbed();
+export default new LeaderboardEmbed();

@@ -1,6 +1,6 @@
-const { PermissionFlagsBits } = require('discord.js');
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import { PermissionFlagsBits } from 'discord.js';
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class PermissionChecker {
   constructor() {
@@ -259,4 +259,4 @@ class PermissionChecker {
   }
 }
 
-module.exports = new PermissionChecker();
+export default new PermissionChecker();

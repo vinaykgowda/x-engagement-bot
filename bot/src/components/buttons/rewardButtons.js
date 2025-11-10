@@ -1,6 +1,6 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-const db = require('../../../database/queries');
-const logger = require('../../../config/logger');
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
+import db from '../../../database/queries.js';
+import logger from '../../../config/logger.js';
 
 class RewardButtons {
   createRewardButtons(rewards) {
@@ -177,4 +177,4 @@ class RewardButtons {
   }
 }
 
-module.exports = new RewardButtons();
+export default new RewardButtons();

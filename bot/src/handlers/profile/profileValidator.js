@@ -1,4 +1,4 @@
-const logger = require('../../config/logger');
+import logger from '../../config/logger.js';
 
 class ProfileValidator {
   constructor() {
@@ -406,4 +406,4 @@ class ProfileValidator {
   }
 }
 
-module.exports = new ProfileValidator();
+export default new ProfileValidator();

@@ -71,4 +71,4 @@ class TweetParser {
   }
 }
 
-module.exports = new TweetParser();
+export default new TweetParser();

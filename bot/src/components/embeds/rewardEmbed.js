@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
 class RewardEmbed {
   create(reward, userPoints) {
@@ -151,4 +151,4 @@ class RewardEmbed {
   }
 }
 
-module.exports = new RewardEmbed();
+export default new RewardEmbed();

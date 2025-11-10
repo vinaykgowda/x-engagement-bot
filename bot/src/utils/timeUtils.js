@@ -109,4 +109,4 @@ class TimeUtils {
   }
 }
 
-module.exports = new TimeUtils();
+export default new TimeUtils();

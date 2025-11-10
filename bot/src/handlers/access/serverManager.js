@@ -1,5 +1,5 @@
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class ServerManager {
   async registerServer(guildId, guildName, accessCode = null) {
@@ -217,4 +217,4 @@ class ServerManager {
   }
 }
 
-module.exports = new ServerManager();
+export default new ServerManager();

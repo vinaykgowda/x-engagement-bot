@@ -1,8 +1,8 @@
-const crypto = require('crypto');
-const db = require('../../database/queries');
-const duplicateChecker = require('./duplicateChecker');
-const profileValidator = require('./profileValidator');
-const logger = require('../../config/logger');
+import crypto from 'crypto';
+import db from '../../database/queries.js';
+import duplicateChecker from './duplicateChecker.js';
+import profileValidator from './profileValidator.js';
+import logger from '../../config/logger.js';
 
 class ProfileManager {
   constructor() {
@@ -398,7 +398,7 @@ class ProfileManager {
 
       /*
       // Production implementation:
-      const axios = require('axios');
+      import axios from 'axios';
       const scraperApiUrl = process.env.SCRAPER_API_URL || 'http://localhost:8000';
       
       const response = await axios.post(`${scraperApiUrl}/api/verify-tweet`, {
@@ -525,4 +525,4 @@ class ProfileManager {
   }
 }
 
-module.exports = new ProfileManager();
+export default new ProfileManager();

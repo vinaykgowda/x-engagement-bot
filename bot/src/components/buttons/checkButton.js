@@ -1,7 +1,7 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-const db = require('../../../database/queries');
-const scraperClient = require('../../handlers/scraper/scraperClient');
-const logger = require('../../../config/logger');
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
+import db from '../../../database/queries.js';
+import scraperClient from '../../handlers/scraper/scraperClient.js';
+import logger from '../../../config/logger.js';
 
 class CheckButton {
   async handleCheck(interaction, engagementId) {
@@ -147,4 +147,4 @@ class CheckButton {
   }
 }
 
-module.exports = new CheckButton();
+export default new CheckButton();

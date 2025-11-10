@@ -1,5 +1,5 @@
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class FrequencyChecker {
   constructor() {
@@ -281,4 +281,4 @@ class FrequencyChecker {
   }
 }
 
-module.exports = new FrequencyChecker();
+export default new FrequencyChecker();

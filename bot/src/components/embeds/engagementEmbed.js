@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
 class EngagementEmbed {
   create(engagement) {
@@ -96,4 +96,4 @@ class EngagementEmbed {
   }
 }
 
-module.exports = new EngagementEmbed();
+export default new EngagementEmbed();

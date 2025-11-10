@@ -2,9 +2,9 @@
 // INTEGRATION EXAMPLE: Complete Profile Management Flow
 // ============================================================================
 
-const profileManager = require('./profile/profileManager');
-const duplicateChecker = require('./profile/duplicateChecker');
-const profileValidator = require('./profile/profileValidator');
+import profileManager from './profile/profileManager.js';
+import duplicateChecker from './profile/duplicateChecker.js';
+import profileValidator from './profile/profileValidator.js';
 
 // ============================================================================
 // Example 1: User Links Twitter Profile (Complete Flow)
@@ -395,7 +395,7 @@ async function runExamples() {
 // Uncomment to run:
 // runExamples().catch(console.error);
 
-module.exports = {
+export default {
   linkTwitterProfileExample,
   checkProfileStatusExample,
   unlinkProfileExample,

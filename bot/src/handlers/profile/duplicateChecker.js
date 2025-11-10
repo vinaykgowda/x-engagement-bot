@@ -1,5 +1,5 @@
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class DuplicateChecker {
   constructor() {
@@ -412,4 +412,4 @@ class DuplicateChecker {
   }
 }
 
-module.exports = new DuplicateChecker();
+export default new DuplicateChecker();

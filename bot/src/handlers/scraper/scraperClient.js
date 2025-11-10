@@ -1,5 +1,5 @@
-const axios = require('axios');
-const logger = require('../../config/logger');
+import axios from 'axios';
+import logger from '../../config/logger.js';
 
 class ScraperClient {
   constructor() {
@@ -126,4 +126,4 @@ class ScraperClient {
   }
 }
 
-module.exports = new ScraperClient();
+export default new ScraperClient();

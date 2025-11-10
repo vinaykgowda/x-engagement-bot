@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 
 class ProfileModal {
   createModal() {
@@ -30,4 +30,4 @@ class ProfileModal {
   }
 }
 
-module.exports = new ProfileModal();
+export default new ProfileModal();

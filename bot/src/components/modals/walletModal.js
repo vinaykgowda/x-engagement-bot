@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 
 class WalletModal {
   createModal() {
@@ -35,4 +35,4 @@ class WalletModal {
   }
 }
 
-module.exports = new WalletModal();
+export default new WalletModal();

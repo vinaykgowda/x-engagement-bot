@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 class EngagementButtons {
   createEngagementRow(engagementId, requirements) {
@@ -92,4 +92,4 @@ class EngagementButtons {
   }
 }
 
-module.exports = new EngagementButtons();
+export default new EngagementButtons();

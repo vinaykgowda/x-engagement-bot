@@ -60,4 +60,4 @@ class Validation {
   }
 }
 
-module.exports = new Validation();
+export default new Validation();

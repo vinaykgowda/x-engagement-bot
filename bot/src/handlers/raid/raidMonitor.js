@@ -1,9 +1,9 @@
-const { EmbedBuilder } = require('discord.js');
-const tweetValidator = require('./tweetValidator');
-const frequencyChecker = require('./frequencyChecker');
-const autoReward = require('./autoReward');
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import { EmbedBuilder } from 'discord.js';
+import tweetValidator from './tweetValidator.js';
+import frequencyChecker from './frequencyChecker.js';
+import autoReward from './autoReward.js';
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class RaidMonitor {
   constructor(client) {
@@ -273,4 +273,4 @@ class RaidMonitor {
   }
 }
 
-module.exports = RaidMonitor;
+export default RaidMonitor;

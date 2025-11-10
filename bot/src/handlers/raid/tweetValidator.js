@@ -1,6 +1,6 @@
-const axios = require('axios');
-const logger = require('../../config/logger');
-const config = require('../../config/settings');
+import axios from 'axios';
+import logger from '../../config/logger.js';
+import config from '../../config/settings.js';
 
 class TweetValidator {
   constructor() {
@@ -234,4 +234,4 @@ class TweetValidator {
   }
 }
 
-module.exports = new TweetValidator();
+export default new TweetValidator();

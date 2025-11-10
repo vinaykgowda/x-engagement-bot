@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
 class ProfileEmbed {
   create(user, profile, points, wallet) {
@@ -136,4 +136,4 @@ class ProfileEmbed {
   }
 }
 
-module.exports = new ProfileEmbed();
+export default new ProfileEmbed();

@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import crypto from 'crypto';
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class AccessCodeManager {
   constructor() {
@@ -206,4 +206,4 @@ class AccessCodeManager {
   }
 }
 
-module.exports = new AccessCodeManager();
+export default new AccessCodeManager();

@@ -1,5 +1,5 @@
-const db = require('../../database/queries');
-const logger = require('../../config/logger');
+import db from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 class AutoReward {
   constructor() {
@@ -365,4 +365,4 @@ class AutoReward {
   }
 }
 
-module.exports = new AutoReward();
+export default new AutoReward();
