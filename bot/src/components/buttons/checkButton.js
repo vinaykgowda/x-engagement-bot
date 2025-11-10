@@ -4,10 +4,14 @@ import scraperClient from '../../handlers/scraper/scraperClient.js';
 import logger from '../../../config/logger.js';
 
 class CheckButton {
+  // Main execute method called from interactionCreate.js
+  async execute(interaction, client, engagementId) {
+    return this.handleCheck(interaction, engagementId);
+  }
+
   async handleCheck(interaction, engagementId) {
     try {
-      await interaction.deferReply({ ephemeral: true });
-
+      // Note: Reply is already deferred by the caller in interactionCreate.js
       const userId = interaction.user.id;
       const guildId = interaction.guild.id;
 
