@@ -64,6 +64,13 @@ export async function execute(interaction, client) {
     // Calculate expiration
     const expiresAt = expiresIn ? Date.now() + (expiresIn * 60 * 60 * 1000) : null;
 
+    // Ensure server exists first (to satisfy FOREIGN KEY constraint)
+    serverQueries.upsertServer(
+      client.db,
+      interaction.guildId,
+      interaction.guild.name
+    );
+
     // Check if engagement already exists
     const existing = engagementQueries.getEngagementByTweetId(
       client.db,

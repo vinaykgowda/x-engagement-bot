@@ -4,6 +4,7 @@
 
 import { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 import { globalUserQueries, twitterQueries, walletQueries } from '../../database/queries.js';
+import logger from '../../config/logger.js';
 
 export const data = new SlashCommandBuilder()
   .setName('my-profile')

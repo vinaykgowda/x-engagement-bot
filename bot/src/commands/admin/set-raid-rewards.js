@@ -3,6 +3,7 @@
 // ============================================================================
 
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { serverQueries } from '../../database/queries.js';
 import logger from '../../config/logger.js';
 
 export const data = new SlashCommandBuilder()
@@ -37,6 +38,13 @@ export async function execute(interaction, client) {
     const amount = interaction.options.getNumber('amount');
 
     const now = Date.now();
+
+    // Ensure server exists first (to satisfy FOREIGN KEY constraint)
+    serverQueries.upsertServer(
+      client.db,
+      interaction.guildId,
+      interaction.guild.name
+    );
 
     // Insert or update role reward
     client.db.prepare(`

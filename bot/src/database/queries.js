@@ -324,7 +324,16 @@ export const rewardQueries = {
   },
 };
 
+// Export connection placeholder (will be set at runtime)
+export let connection = null;
+
+export function setConnection(db) {
+  connection = db;
+}
+
 export default {
+  connection,
+  setConnection,
   globalUserQueries,
   twitterQueries,
   walletQueries,

@@ -7,6 +7,7 @@ import settings from './config/settings.js';
 import logger from './config/logger.js';
 import migrations from './database/migrations.js';
 import dbConnection from './config/database.js';
+import { setConnection } from './database/queries.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,6 +38,10 @@ class XEngagementBot {
       // Initialize database
       await migrations.initialize();
       this.client.db = dbConnection.getDatabase();
+
+      // Set database connection for queries module
+      setConnection(this.client.db);
+
       logger.info('✓ Database initialized');
 
       // Load commands
