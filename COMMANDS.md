@@ -61,6 +61,78 @@ These commands are available to all server members.
 
 ---
 
+### `/verify-profile`
+**Description:** Verify your Twitter profile with a tweet URL
+
+**Usage:**
+```
+/verify-profile tweet-url: https://x.com/username/status/123456789
+```
+
+**Parameters:**
+- `tweet-url` (required): URL of your verification tweet containing the code
+
+**Details:**
+- Use this command after posting your verification tweet
+- Must be used within 15 minutes of getting your verification code
+- The tweet must contain the exact verification code from `/set-profile`
+- Once verified, you can participate in engagements and raids
+
+**Workflow:**
+1. Run `/set-profile` and get your verification code
+2. Post a tweet containing the code
+3. Copy the tweet URL
+4. Run `/verify-profile` with the tweet URL
+5. Your profile will be verified and linked
+
+---
+
+### `/unlink-profile`
+**Description:** Unlink your Twitter/X profile from your Discord account
+
+**Usage:**
+```
+/unlink-profile
+```
+
+**Details:**
+- Removes your linked Twitter account
+- Requires confirmation before unlinking
+- You can re-link anytime with `/set-profile`
+- Unlinking will disable participation in:
+  - Engagement campaigns
+  - Raid rewards
+  - Twitter-based features
+
+**Use Case:** Use this if you want to link a different Twitter account
+
+---
+
+### `/help`
+**Description:** Show bot commands and help information
+
+**Usage:**
+```
+/help
+/help category: user
+/help category: admin
+/help category: start
+```
+
+**Parameters:**
+- `category` (optional): Filter commands by category
+  - `user` - Show all user commands
+  - `admin` - Show all admin commands
+  - `start` - Show getting started guide
+
+**Details:**
+- Interactive help menu with embedded information
+- Categorized command listings
+- Quick reference for common commands
+- Getting started guide for new users
+
+---
+
 ### `/my-wallet`
 **Description:** View your Solana wallet information
 
@@ -424,11 +496,13 @@ These commands are only available to bot super administrators (bot owner and aut
 
 ### User Participation
 1. Run `/set-profile` to link Twitter account
-2. Run `/set-wallet` to link Solana wallet (for crypto rewards)
-3. Complete engagements posted by admins
-4. Check `/my-points` to see your balance
-5. Use `/leaderboard` to see your rank
-6. Run `/claim-reward` to spend points
+2. Post verification tweet and run `/verify-profile` with the tweet URL
+3. Run `/set-wallet` to link Solana wallet (for crypto rewards)
+4. Complete engagements posted by admins
+5. Check `/my-points` to see your balance
+6. Use `/leaderboard` to see your rank
+7. Run `/claim-reward` to spend points
+8. Use `/help` to see all available commands
 
 ### Raid Tweet Participation
 1. Ensure your profile and wallet are set up
@@ -473,8 +547,44 @@ For additional help:
 
 ---
 
+## Command Summary
+
+**Total Commands: 23**
+
+**User Commands (11):**
+- `/ping` - Check bot status
+- `/help` - Show help menu
+- `/my-profile` - View your profile
+- `/set-profile` - Link Twitter account
+- `/verify-profile` - Verify Twitter with tweet
+- `/unlink-profile` - Unlink Twitter account
+- `/my-wallet` - View wallet info
+- `/set-wallet` - Link Solana wallet
+- `/my-points` - Check points balance
+- `/leaderboard` - View rankings
+- `/claim-reward` - Spend points
+
+**Admin Commands (9):**
+- `/setup-raid` - Configure raid system
+- `/post-engagement` - Create engagement campaign
+- `/set-raid-rewards` - Set role-based rewards
+- `/set-rewards` - Configure claimable rewards
+- `/set-points` - Set default points
+- `/set-tweet-limit` - Set raid frequency
+- `/set-expiration` - Update campaign expiration
+- `/view-stats` - View statistics
+
+**Super Admin Commands (3):**
+- `/generate-code` - Generate server access codes
+- `/list-servers` - List all servers
+- `/server-stats` - View cross-server stats
+
+---
+
 ## Version Information
 
 This documentation is current as of the latest bot version.
 
-Last Updated: 2025-11-10
+**Last Updated:** 2025-11-10
+**Commands:** 23 total (11 user, 9 admin, 3 super admin)
+**New Commands Added:** `/verify-profile`, `/unlink-profile`, `/help`

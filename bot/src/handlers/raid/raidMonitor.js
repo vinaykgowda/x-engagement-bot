@@ -240,7 +240,7 @@ class RaidMonitor {
       .setDescription('Please post a valid X/Twitter link to participate in the raid.')
       .addFields({
         name: 'Valid Format',
-        value: '`https://twitter.com/username/status/1234567890`\nor\n`https://x.com/username/status/1234567890`'
+        value: '`https://x.com/username/status/1234567890`\nor\n`https://twitter.com/username/status/1234567890`'
       })
       .setTimestamp();
 

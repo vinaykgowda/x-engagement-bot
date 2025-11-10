@@ -18,8 +18,8 @@ export async function execute(interaction, client) {
 
   const twitterInput = new TextInputBuilder()
     .setCustomId('twitter_username')
-    .setLabel('Twitter Username or URL')
-    .setPlaceholder('@username or https://twitter.com/username')
+    .setLabel('Twitter/X Username or URL')
+    .setPlaceholder('@username or https://x.com/username')
     .setStyle(TextInputStyle.Short)
     .setRequired(true)
     .setMaxLength(100);
