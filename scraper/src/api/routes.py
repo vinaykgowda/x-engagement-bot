@@ -1,7 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
-from typing import List
-
-from api.models import (
+from .models import (
     ValidateTweetRequest,
     ValidateTweetResponse,
     CheckEngagementRequest,
@@ -18,11 +15,11 @@ from api.models import (
     VerifyEngagementRequest,
     VerifyEngagementResponse
 )
-from scrapers.twitter_scraper import twitter_scraper
-from scrapers.engagement_checker import engagement_checker
-from utils.rate_limiter import rate_limiter
-from utils.logger import logger
-from config import settings
+from ..scrapers.twitter_scraper import twitter_scraper
+from ..scrapers.engagement_checker import engagement_checker
+from ..utils.rate_limiter import rate_limiter
+from ..utils.logger import logger
+from ..config import settings
 
 router = APIRouter(prefix="/scraper", tags=["scraper"])
 
@@ -229,7 +226,7 @@ async def search_tweets(request: SearchTweetsRequest):
             raise HTTPException(status_code=429, detail="Rate limit exceeded")
 
         # Use RapidAPI client to search tweets
-        from scrapers.rapidapi_client import rapidapi_client
+            from ..scrapers.rapidapi_client import rapidapi_client
 
         tweet_results = await rapidapi_client.search_tweets(request.query, request.count)
 

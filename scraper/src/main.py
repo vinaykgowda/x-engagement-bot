@@ -3,11 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import uvicorn
 
-from api.routes import router
-from api.models import VerifyEngagementRequest, VerifyEngagementResponse
-from scrapers.engagement_checker import engagement_checker
-from config import settings
-from utils.logger import logger
+from .api.routes import router
+from .api.models import VerifyEngagementRequest, VerifyEngagementResponse
+from .scrapers.engagement_checker import engagement_checker
+from .config import settings
+from .utils.logger import logger
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
