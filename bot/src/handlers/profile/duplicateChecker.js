@@ -1,4 +1,4 @@
-import db from '../../database/queries.js';
+import { connection, twitterQueries } from '../../database/queries.js';
 import logger from '../../config/logger.js';
 
 class DuplicateChecker {
@@ -72,8 +72,8 @@ class DuplicateChecker {
    */
   checkTwitterUsernameDuplicate(twitterUsername, excludeUserId) {
     try {
-      const existing = db.twitterQueries.getProfileByUsername(
-        db.connection,
+      const existing = twitterQueries.getProfileByUsername(
+        connection,
         twitterUsername
       );
 
@@ -112,7 +112,7 @@ class DuplicateChecker {
    */
   checkUserHasProfile(userId) {
     try {
-      const existing = db.twitterQueries.getProfile(db.connection, userId);
+      const existing = twitterQueries.getProfile(connection, userId);
 
       if (!existing) {
         return {
@@ -143,7 +143,7 @@ class DuplicateChecker {
   async batchCheckDuplicates() {
     try {
       // Get all Twitter profiles
-      const allProfiles = db.connection.prepare(
+      const allProfiles = connection.prepare(
         'SELECT user_id, twitter_username FROM global_twitter_profiles'
       ).all();
 
@@ -199,7 +199,7 @@ class DuplicateChecker {
    */
   checkUserConsistency(userId) {
     try {
-      const profile = db.twitterQueries.getProfile(db.connection, userId);
+      const profile = twitterQueries.getProfile(connection, userId);
 
       if (!profile) {
         return {
@@ -235,9 +235,9 @@ class DuplicateChecker {
   findUsersWithTwitterAccount(twitterUsername) {
     try {
       const normalizedUsername = this.normalizeUsername(twitterUsername);
-      
-      const profile = db.twitterQueries.getProfileByUsername(
-        db.connection,
+
+      const profile = twitterQueries.getProfileByUsername(
+        connection,
         normalizedUsername
       );
 
@@ -312,7 +312,7 @@ class DuplicateChecker {
       const normalizedUsername = this.normalizeUsername(twitterUsername);
 
       // Get all profiles with this Twitter username
-      const allProfiles = db.connection.prepare(
+      const allProfiles = connection.prepare(
         'SELECT * FROM global_twitter_profiles WHERE twitter_username = ?'
       ).all(normalizedUsername);
 
@@ -335,9 +335,9 @@ class DuplicateChecker {
 
       // Unlink all others
       const toRemove = allProfiles.filter(p => p.user_id !== keepUserId);
-      
+
       for (const profile of toRemove) {
-        db.connection.prepare(
+        connection.prepare(
           'DELETE FROM global_twitter_profiles WHERE user_id = ?'
         ).run(profile.user_id);
         
@@ -366,7 +366,7 @@ class DuplicateChecker {
   async validateDatabaseConstraints() {
     try {
       // Check UNIQUE constraint on user_id
-      const userIdCheck = db.connection.prepare(`
+      const userIdCheck = connection.prepare(`
         SELECT user_id, COUNT(*) as count
         FROM global_twitter_profiles
         GROUP BY user_id
@@ -374,7 +374,7 @@ class DuplicateChecker {
       `).all();
 
       // Check UNIQUE constraint on twitter_username
-      const usernameCheck = db.connection.prepare(`
+      const usernameCheck = connection.prepare(`
         SELECT twitter_username, COUNT(*) as count
         FROM global_twitter_profiles
         GROUP BY twitter_username

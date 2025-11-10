@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
-import db from '../../../database/queries.js';
+import { connection, engagementQueries, globalUserQueries, pointsQueries } from '../../database/queries.js';
 import scraperClient from '../../handlers/scraper/scraperClient.js';
-import logger from '../../../config/logger.js';
+import logger from '../../config/logger.js';
 
 class CheckButton {
   // Main execute method called from interactionCreate.js
@@ -15,22 +15,22 @@ class CheckButton {
       const userId = interaction.user.id;
       const guildId = interaction.guild.id;
 
-      const engagement = db.engagementQueries.getEngagement(db.connection, engagementId);
-      
+      const engagement = engagementQueries.getEngagement(connection, engagementId);
+
       if (!engagement) {
         return interaction.editReply('❌ Engagement not found');
       }
 
-      const userProfile = db.globalUserQueries.getUserWithTwitter(db.connection, userId);
-      
+      const userProfile = globalUserQueries.getUserWithTwitter(connection, userId);
+
       if (!userProfile || !userProfile.twitter_username) {
         return interaction.editReply('❌ Please link your Twitter profile first using `/set-profile`');
       }
 
-      const userEngagement = db.engagementQueries.getUserEngagement(db.connection, engagementId, userId);
-      
+      const userEngagement = engagementQueries.getUserEngagement(connection, engagementId, userId);
+
       if (!userEngagement) {
-        db.engagementQueries.recordUserEngagement(db.connection, engagementId, userId, guildId);
+        engagementQueries.recordUserEngagement(connection, engagementId, userId, guildId);
       }
 
       const checkResult = await scraperClient.checkUserEngagement(
@@ -50,8 +50,8 @@ class CheckButton {
         bookmarked: engagement.require_bookmark ? results.bookmarked : true
       };
 
-      db.engagementQueries.updateUserEngagement(
-        db.connection,
+      engagementQueries.updateUserEngagement(
+        connection,
         engagementId,
         userId,
         verificationResults
@@ -60,17 +60,17 @@ class CheckButton {
       const allCompleted = Object.values(verificationResults).every(v => v === true);
 
       if (allCompleted) {
-        db.pointsQueries.addPoints(db.connection, userId, guildId, engagement.points_reward);
-        
-        db.connection.prepare(`
-          UPDATE server_engagements 
-          SET total_completions = total_completions + 1 
+        pointsQueries.addPoints(connection, userId, guildId, engagement.points_reward);
+
+        connection.prepare(`
+          UPDATE server_engagements
+          SET total_completions = total_completions + 1
           WHERE id = ?
         `).run(engagementId);
 
-        db.connection.prepare(`
-          UPDATE server_user_engagements 
-          SET points_awarded = ? 
+        connection.prepare(`
+          UPDATE server_user_engagements
+          SET points_awarded = ?
           WHERE engagement_id = ? AND user_id = ?
         `).run(engagement.points_reward, engagementId, userId);
       }

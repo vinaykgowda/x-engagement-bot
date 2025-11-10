@@ -2,7 +2,7 @@
 // FILE 2: bot/src/commands/user/my-profile.js
 // ============================================================================
 
-import { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
+import { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { globalUserQueries, twitterQueries, walletQueries } from '../../database/queries.js';
 import logger from '../../config/logger.js';
 
@@ -85,18 +85,14 @@ export async function execute(interaction, client) {
       embeds: [embed],
       components: [
         new ActionRowBuilder().addComponents(
-          {
-            type: 2,
-            style: 1,
-            label: '🐦 Update Twitter',
-            custom_id: 'update_twitter',
-          },
-          {
-            type: 2,
-            style: 1,
-            label: '💳 Update Wallet',
-            custom_id: 'update_wallet',
-          }
+          new ButtonBuilder()
+            .setCustomId('update_twitter')
+            .setLabel('🐦 Update Twitter')
+            .setStyle(ButtonStyle.Primary),
+          new ButtonBuilder()
+            .setCustomId('update_wallet')
+            .setLabel('💳 Update Wallet')
+            .setStyle(ButtonStyle.Primary)
         ),
       ],
     });

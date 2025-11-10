@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import db from '../../database/queries.js';
+import { connection, globalUserQueries, twitterQueries } from '../../database/queries.js';
 import duplicateChecker from './duplicateChecker.js';
 import profileValidator from './profileValidator.js';
 import logger from '../../config/logger.js';
@@ -19,8 +19,8 @@ class ProfileManager {
    */
   async createOrUpdateUser(userId, username, discriminator) {
     try {
-      const result = db.globalUserQueries.upsertUser(
-        db.connection,
+      const result = globalUserQueries.upsertUser(
+        connection,
         userId,
         username,
         discriminator
@@ -47,7 +47,7 @@ class ProfileManager {
    */
   async getUserProfile(userId) {
     try {
-      const profile = db.globalUserQueries.getUserWithTwitter(db.connection, userId);
+      const profile = globalUserQueries.getUserWithTwitter(connection, userId);
 
       if (!profile) {
         return {
@@ -251,8 +251,8 @@ class ProfileManager {
       }
 
       // Set Twitter profile in database
-      db.twitterQueries.setProfile(
-        db.connection,
+      twitterQueries.setProfile(
+        connection,
         userId,
         twitterUsername,
         twitterUrl
@@ -281,7 +281,7 @@ class ProfileManager {
   async unlinkTwitterProfile(userId) {
     try {
       // Check if user has a linked profile
-      const profile = db.twitterQueries.getProfile(db.connection, userId);
+      const profile = twitterQueries.getProfile(connection, userId);
 
       if (!profile) {
         return {
@@ -291,7 +291,7 @@ class ProfileManager {
       }
 
       // Delete the Twitter profile
-      db.connection.prepare('DELETE FROM global_twitter_profiles WHERE user_id = ?').run(userId);
+      connection.prepare('DELETE FROM global_twitter_profiles WHERE user_id = ?').run(userId);
 
       logger.info(`Twitter profile unlinked: ${userId} (was @${profile.twitter_username})`);
 
@@ -333,8 +333,8 @@ class ProfileManager {
    */
   async markProfileAsVerified(userId) {
     try {
-      db.connection.prepare(`
-        UPDATE global_twitter_profiles 
+      connection.prepare(`
+        UPDATE global_twitter_profiles
         SET verified = 1, updated_at = ?
         WHERE user_id = ?
       `).run(Date.now(), userId);
@@ -505,9 +505,9 @@ class ProfileManager {
   async getProfileStats() {
     try {
       const stats = {
-        totalUsers: db.connection.prepare('SELECT COUNT(*) as count FROM global_users').get().count,
-        linkedProfiles: db.connection.prepare('SELECT COUNT(*) as count FROM global_twitter_profiles').get().count,
-        verifiedProfiles: db.connection.prepare('SELECT COUNT(*) as count FROM global_twitter_profiles WHERE verified = 1').get().count,
+        totalUsers: connection.prepare('SELECT COUNT(*) as count FROM global_users').get().count,
+        linkedProfiles: connection.prepare('SELECT COUNT(*) as count FROM global_twitter_profiles').get().count,
+        verifiedProfiles: connection.prepare('SELECT COUNT(*) as count FROM global_twitter_profiles WHERE verified = 1').get().count,
         pendingVerifications: this.pendingVerifications.size
       };
 
