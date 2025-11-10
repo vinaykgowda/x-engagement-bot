@@ -1,46 +1,44 @@
-# ============================================================================
-# X Engagement Scraper Configuration
-# ============================================================================
+from pydantic_settings import BaseSettings
+from typing import List
+import os
 
-# Server Configuration
-HOST=0.0.0.0
-PORT=8000
-ENVIRONMENT=development
-DEBUG=true
 
-# CORS Configuration
-ALLOWED_ORIGINS=["*"]
+class Settings(BaseSettings):
+    """Application settings loaded from environment variables"""
 
-# ============================================================================
-# RapidAPI Configuration (Twitter AIO API)
-# ============================================================================
-# Get your API key from: https://rapidapi.com/Devomes/api/twitter-aio
-# REQUIRED: This API is used for all Twitter/X data fetching
-# Without a valid API key, the scraper service will not function
-# 👇 ADD YOUR RAPIDAPI KEY HERE 👇
-RAPIDAPI_KEY=8c5133daecmshbdd77cd334421c8p1ebcb1jsn3ee414f79f3e
-RAPIDAPI_HOST=twitter-aio.p.rapidapi.com
-RAPIDAPI_BASE_URL=https://twitter-aio.p.rapidapi.com
+    # Server Configuration
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+    ENVIRONMENT: str = "development"
+    DEBUG: bool = True
 
-# ============================================================================
-# Rate Limiting Configuration
-# ============================================================================
-# Controls API request rate limits to prevent abuse
-RATE_LIMIT_REQUESTS=100          # Max requests per window
-RATE_LIMIT_WINDOW=3600           # Time window in seconds (1 hour)
+    # CORS Configuration
+    ALLOWED_ORIGINS: List[str] = ["*"]
 
-# ============================================================================
-# Cache Configuration
-# ============================================================================
-# Caching reduces API calls and improves response times
-CACHE_ENABLED=true
-CACHE_TTL=300                    # Default cache TTL in seconds (5 minutes)
-CACHE_MAX_SIZE=1000              # Maximum number of cached items
+    # RapidAPI Configuration
+    RAPIDAPI_KEY: str = ""
+    RAPIDAPI_HOST: str = "twitter-aio.p.rapidapi.com"
+    RAPIDAPI_BASE_URL: str = "https://twitter-aio.p.rapidapi.com"
 
-# ============================================================================
-# Request & Retry Configuration
-# ============================================================================
-# Controls behavior for external API requests
-REQUEST_TIMEOUT=30               # Request timeout in seconds
-MAX_RETRIES=3                    # Maximum retry attempts for failed requests
-RETRY_DELAY=2                    # Initial delay between retries in seconds (exponential backoff)
+    # Rate Limiting
+    RATE_LIMIT_REQUESTS: int = 100
+    RATE_LIMIT_WINDOW: int = 3600
+
+    # Cache Configuration
+    CACHE_ENABLED: bool = True
+    CACHE_TTL: int = 300
+    CACHE_MAX_SIZE: int = 1000
+
+    # Request & Retry Configuration
+    REQUEST_TIMEOUT: int = 30
+    MAX_RETRIES: int = 3
+    RETRY_DELAY: int = 2
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        case_sensitive = True
+
+
+# Create global settings instance
+settings = Settings()
