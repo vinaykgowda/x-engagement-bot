@@ -43,3 +43,22 @@ export async function execute(interaction, client) {
     await interaction.reply({
       embeds: [{
         color: 0x00ff00,
+        title: '✅ Tweet Limit Updated',
+        description: `Users can now post raid tweets once every **${hours} hour${hours > 1 ? 's' : ''}**.`,
+        fields: [
+          { name: '⏰ Frequency', value: `${hours} hour${hours > 1 ? 's' : ''}`, inline: true },
+          { name: '📅 Next Tweet', value: `After ${hours}h from last tweet`, inline: true },
+        ],
+        timestamp: new Date().toISOString(),
+      }],
+      ephemeral: true,
+    });
+
+  } catch (error) {
+    logger.error('Error updating tweet limit:', error);
+    await interaction.reply({
+      content: '❌ Failed to update tweet limit.',
+      ephemeral: true,
+    });
+  }
+}
