@@ -82,6 +82,11 @@ async function handleButton(client, interaction) {
         await handleOpenModal(client, interaction, 'wallet');
         break;
 
+      case 'confirm_unlink_profile':
+      case 'cancel_unlink_profile':
+        await handleProfileButtons(client, interaction, action);
+        break;
+
       default:
         logger.warn(`Unknown button action: ${action}`);
     }
@@ -170,6 +175,11 @@ async function handleCheckEngagement(client, interaction, engagementId) {
   await checkEngagementHandler.execute(interaction, client, engagementId);
 }
 
+async function handleProfileButtons(client, interaction, action) {
+  const { default: profileButtons } = await import('../components/buttons/profileButtons.js');
+  await profileButtons.execute(interaction, client, action);
+}
+
 async function handleOpenModal(client, interaction, type) {
   const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = await import('discord.js');
 
@@ -180,8 +190,8 @@ async function handleOpenModal(client, interaction, type) {
 
     const input = new TextInputBuilder()
       .setCustomId('twitter_username')
-      .setLabel('Twitter Username or URL')
-      .setPlaceholder('@username or https://twitter.com/username')
+      .setLabel('Twitter/X Username or URL')
+      .setPlaceholder('@username or https://x.com/username')
       .setStyle(TextInputStyle.Short)
       .setRequired(true);
 
