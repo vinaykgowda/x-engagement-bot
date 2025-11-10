@@ -1,5 +1,5 @@
 // ============================================================================
-// FILE 1: bot/src/config/settings.js
+// FILE: bot/src/config/settings.js
 // ============================================================================
 
 import dotenv from 'dotenv';
@@ -9,14 +9,14 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load environment variables
-dotenv.config({ path: join(__dirname, '../../../.env') });
+// Load environment variables from bot/.env
+dotenv.config({ path: join(__dirname, '../../.env') });
 
 const settings = {
   // Discord Configuration
   discord: {
     token: process.env.DISCORD_TOKEN,
-    clientId: process.env.DISCORD_CLIENT_ID,
+    clientId: process.env.DISCORD_CLIENTID || process.env.DISCORD_CLIENT_ID,
   },
 
   // Database Configuration
@@ -44,7 +44,7 @@ const settings = {
 
   // Security
   security: {
-    encryptionKey: process.env.ENCRYPTION_KEY,
+    encryptionKey: process.env.SECURITY_ENCRYPTIONKEY || process.env.ENCRYPTION_KEY,
   },
 
   // Rate Limiting

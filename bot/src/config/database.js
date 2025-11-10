@@ -19,8 +19,9 @@ class DatabaseConnection {
 
   connect() {
     try {
-      // Resolve database path
-      const dbPath = join(__dirname, '../../..', settings.database.path);
+      // Resolve database path - fixed to stay within project
+      // From bot/src/config/ go up to bot/, then to database path
+      const dbPath = join(__dirname, '../..', settings.database.path);
       const dbDir = dirname(dbPath);
 
       // Ensure database directory exists
